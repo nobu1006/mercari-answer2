@@ -13,13 +13,14 @@
   <!-- script -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <title>Rakus Items</title>
+  <title>Rakus Items list</title>
 <script>
   // DOM読み込み完了時
   $(function() {
 
     // ブランド名リンククリック時のイベント処理設定
     $('.brandLink').on('click', function() {
+      $('#searchForm [name=actionMode]').val('search');
       $('#searchForm [name=brand]').val($(this).text());
       $('#searchForm [name=page]').val(1);
       $('#searchForm').submit();
@@ -34,6 +35,7 @@
 
     // Goボタンクリック時のイベント処理設定
     $('#button-go').on('click', function() {
+      $('#searchForm [name=actionMode]').val('search');
       $('#searchForm').submit();
     });
 
@@ -104,7 +106,7 @@
   <div id="main" class="container-fluid">
     <!-- addItem link -->
     <div id="addItemButton">
-      <a class="btn btn-default" href="./add.html"><i class="fa fa-plus-square-o"></i> Add New Item</a>
+      <a class="btn btn-default" th:href="@{/item/add}"><i class="fa fa-plus-square-o"></i> Add New Item</a>
     </div>
 
     <!-- 検索フォーム -->
@@ -174,13 +176,13 @@
         </thead>
         <tbody>
           <tr th:each="item : ${session.itemList}">
-            <td class="item-name"><a th:href="@{/item/detail}" th:text="${item.name}">Razer BlackWidow Chroma Keyboard</a></td>
+            <td class="item-name"><a th:href="@{/item/detail/{itemId}(itemId=${item.id})}" th:text="${item.name}">Razer BlackWidow Chroma Keyboard</a></td>
             <td class="item-price" th:text="${item.price}">52.0</td>
             <td class="item-category">
               <div th:if="${item.nameAll}">
                 <a th:href="@{/item/search(daiCategoryId=${item.daiCategoryId})}" th:data-category="${item.daiCategoryId}" th:text="${item.daiCategoryName}">Electronics</a> /
-                <a th:href="@{/item/search(chuCategoryId=${item.chuCategoryId})}" th:data-category="${item.chuCategoryId}" th:text="${item.chuCategoryName}">Computers &amp; Tablets</a> /
-                <a th:href="@{/item/search(syoCategoryId=${item.category})}" th:data-category="${item.category}" th:text="${item.syoCategoryName}">Components &amp; Parts</a>
+                <a th:href="@{/item/search(daiCategoryId=${item.daiCategoryId},chuCategoryId=${item.chuCategoryId})}" th:data-category="${item.chuCategoryId}" th:text="${item.chuCategoryName}">Computers &amp; Tablets</a> /
+                <a th:href="@{/item/search(daiCategoryId=${item.daiCategoryId},chuCategoryId=${item.chuCategoryId},syoCategoryId=${item.category})}" th:data-category="${item.category}" th:text="${item.syoCategoryName}">Components &amp; Parts</a>
               </div>
             </td>
             <td class="item-brand"><a class="brandLink" th:text="${item.brand}">Razer</a></td>

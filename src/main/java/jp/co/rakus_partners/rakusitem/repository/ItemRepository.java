@@ -97,6 +97,29 @@ public class ItemRepository {
         return sql;
     }
 
+    public Item findById(Integer itemId) {
+        String sql = "SELECT";
+        sql += "  i.id id";
+        sql += " , i.name \"name\"";
+        sql += " , condition";
+        sql += " , category";
+        sql += " , c_chu.id chu_category_id";
+        sql += " , c_chu.parent dai_category_id";
+        sql += " , category";
+        sql += " , brand";
+        sql += " , price";
+        sql += " , shipping";
+        sql += " , description";
+        sql += " , c_syo.name_all";
+        sql += " FROM items i";
+        sql += " LEFT JOIN category c_syo ON c_syo.id = i.category";
+        sql += " LEFT JOIN category c_chu ON c_chu.id = c_syo.parent";
+        sql += " WHERE i.id = :itemId";
+        logger.info("sql = " + sql);
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("itemId", itemId);
+        return namedJdbcTemplate.queryForObject(sql, params, ROW_MAPPER);
+    }
 
     /**
      * ボツコード.

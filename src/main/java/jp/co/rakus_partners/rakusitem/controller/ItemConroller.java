@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
@@ -66,6 +67,12 @@ public class ItemConroller {
         }
         model.addAttribute("maxPage", maxPage);
         return "list.html";
+    }
+
+    @RequestMapping("/detail/{itemId}")
+    public String detail(@PathVariable("itemId") Integer itemId, Model model) {
+        model.addAttribute("item", itemService.findById(itemId));
+        return "detail.html";
     }
 
 }

@@ -21,6 +21,10 @@ public class ItemService {
     public Integer searchCount(SearchForm searchForm) {
         return itemRepository.searchCount(searchForm);
     }
+
+    public Item findById(Integer itemId) {
+        return itemRepository.findById(itemId);
+    }
 }
 
 
