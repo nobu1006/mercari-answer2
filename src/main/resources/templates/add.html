@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <!-- css -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" 
-    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-    integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
   <link rel="stylesheet" href="./mercari.css"/>
   <!-- script -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <title>Rakus Items</title>
+  <title>Rakus Items(add)</title>
 </head>
 <body>
   <!-- navbar -->
@@ -26,7 +25,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="./list.html">Rakus Items</a>
+      <a class="navbar-brand" th:href="@{/item/search}">Rakus Items</a>
     </div>
     <div id="navbar" class="collapse navbar-collapse">
       <div>
@@ -65,48 +64,36 @@
       </div>
       <!-- category -->
       <div class="form-group">
-        <label for="category" class="col-sm-2 control-label">category</label>
+        <label for="dai_category" class="col-sm-2 control-label">category</label>
         <div class="col-sm-8">
-          <select class="form-control">
+          <select class="form-control" id="dai_category">
             <option>-- parentCategory --</option>
             <option>parentCategory1</option>
-            <option>parentCategory2</option>
-            <option>parentCategory3</option>
-            <option>parentCategory4</option>
-            <option>parentCategory5</option>
           </select>
         </div>
       </div>
       <div class="form-group">
-        <label for="category" class="col-sm-2 control-label"></label>
+        <label for="chu_category" class="col-sm-2 control-label"></label>
         <div class="col-sm-8">
-          <select class="form-control">
+          <select class="form-control" id="chu_category">
             <option>-- childCategory --</option>
             <option>childCategory1</option>
-            <option>childCategory2</option>
-            <option>childCategory3</option>
-            <option>childCategory4</option>
-            <option>childCategory5</option>
           </select>
         </div>
       </div>
       <div class="form-group">
-        <label for="category" class="col-sm-2 control-label"></label>
+        <label for="syo_category" class="col-sm-2 control-label"></label>
         <div class="col-sm-8">
-          <select class="form-control">
+          <select class="form-control" id="syo_category">
             <option>-- grandChild --</option>
             <option>grandChild1</option>
-            <option>grandChild2</option>
-            <option>grandChild3</option>
-            <option>grandChild4</option>
-            <option>grandChild5</option>
           </select>
         </div>
       </div>
       <div class="form-group">
-        <label for="category" class="col-sm-2 control-label"></label>
+        <label for="error_category" class="col-sm-2 control-label"></label>
         <div class="col-sm-8">
-          <span class="text-danger">error:may not be empty</span>
+          <span class="text-danger" id="error_category">error:may not be empty</span>
         </div>
       </div>
       <!-- brand -->
@@ -120,7 +107,7 @@
       <!-- condition -->
       <div class="form-group">
         <label for="condition" class="col-sm-2 control-label">condition</label>
-        <div class="col-sm-8">
+        <div class="col-sm-8" id="condition">
           <label for="condition1" class="radio-inline">
             <input type="radio" name="condition" id="condition1" value="1"/> 1
           </label>

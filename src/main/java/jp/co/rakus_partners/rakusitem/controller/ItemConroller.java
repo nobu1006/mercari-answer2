@@ -75,4 +75,9 @@ public class ItemConroller {
         return "detail.html";
     }
 
+    @RequestMapping("/add")
+    public String add() {
+        return "add.html";
+    }
+
 }
