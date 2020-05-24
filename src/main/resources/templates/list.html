@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- css -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"/>
+  <link rel="stylesheet" th:href="@{/css/mercari.css}"/>
+  <!-- script -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <title>Rakus Items</title>
+<script>
+  // DOM読み込み完了時
+  $(function() {
+
+    // ブランド名リンククリック時のイベント処理設定
+    $('.brandLink').on('click', function() {
+      $('#searchForm [name=brand]').val($(this).text());
+      $('#searchForm [name=page]').val(1);
+      $('#searchForm').submit();
+    });
+
+    // 検索ボタンクリック時のイベント処理設定
+    $('#button-search').on('click', function() {
+      $('#searchForm [name=actionMode]').val('search');
+      $('#searchForm [name=page]').val(1);
+      $('#searchForm').submit();
+    });
+
+    // Goボタンクリック時のイベント処理設定
+    $('#button-go').on('click', function() {
+      $('#searchForm').submit();
+    });
+
+    // 大カテゴリープルダウン変更時のイベント処理設定
+    $('#daiSelect').on('change', function() {
+      $('#searchForm [name=chuCategoryId]').val('');
+      $('#searchForm [name=syoCategoryId]').val('');
+      $('#searchForm [name=actionMode]').val('');
+      $('#searchForm').submit();
+    });
+
+    // 中カテゴリープルダウン変更時のイベント処理設定
+    $('#chuSelect').on('change', function() {
+      $('#searchForm [name=actionMode]').val('');
+      $('#searchForm').submit();
+    });
+
+    // next,previousリンクの無効化
+    var currentPage = parseInt($('#searchForm [name=page]').val());
+    var maxPage = parseInt($('#maxPage').text());
+    if (currentPage == 1) {
+      $('.previous').addClass('disabled');
+    }
+    if (currentPage == maxPage) {
+      $('.next').addClass('disabled');
+    }
+
+    // nextリンククリック時のイベント処理設定
+    $('.next').on('click', function() {
+      $('#searchForm [name=page]').val(currentPage + 1);
+      $('#searchForm').submit();
+    });
+
+    // previousリンククリック時のイベント処理設定
+    $('.previous').on('click', function() {
+      $('#searchForm [name=page]').val(currentPage - 1);
+      $('#searchForm').submit();
+    });
+
+  });
+</script>
+</head>
+<body>
+  <!-- navbar -->
+  <nav class="navbar navbar-inverse">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" th:href="@{/item/search}">Rakus Items</a>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+      <div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a id="logout" href="./login.html">Logout <i class="fa fa-power-off"></i></a></li>
+        </ul>
+        <p class="navbar-text navbar-right">
+          <span id="loginName">user: userName</span>
+        </p>
+      </div>
+    </div>
+  </nav>
+
+  <div id="main" class="container-fluid">
+    <!-- addItem link -->
+    <div id="addItemButton">
+      <a class="btn btn-default" href="./add.html"><i class="fa fa-plus-square-o"></i> Add New Item</a>
+    </div>
+
+    <!-- 検索フォーム -->
+    <form id="searchForm" method="POST" th:action="@{/item/search}" class="form-inline" role="form" th:object="${searchForm}">
+      <div id="forms">
+        <div class="form-group">
+          <input type="text" class="form-control" th:field="*{itemKeyword}" placeholder="Item keyword" />
+        </div>
+        <div class="form-group"><i class="fa fa-plus"></i></div>
+        <div class="form-group">
+          <select id="daiSelect" th:field="*{daiCategoryId}" class="form-control">
+            <option value="">- dai -</option>
+            <option th:each="cate : ${daiCategories}" th:value="${cate.id}" th:text="${cate.name}">大</option>
+          </select>
+          <select id="chuSelect" th:field="*{chuCategoryId}" class="form-control">
+            <option value="">- chu -</option>
+            <option th:each="cate : ${chuCategories}" th:value="${cate.id}" th:text="${cate.name}">中</option>
+          </select>
+          <select id="syoSelect" th:field="*{syoCategoryId}" class="form-control">
+            <option value="">- syo -</option>
+            <option th:each="cate : ${syoCategories}" th:value="${cate.id}" th:text="${cate.name}">中</option>
+          </select>
+        </div>
+        <div class="form-group"><i class="fa fa-plus"></i></div>
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="brand" th:field="*{brand}" />
+        </div>
+        <div class="form-group"></div>
+        <input type="hidden" name="actionMode" />
+        <button id="button-search" type="button" class="btn btn-default"><i class="fa fa-angle-double-right"></i> 検索</button>
+      </div>
+      <div id="select-page">
+        <div class="form-group">
+          <div class="input-group col-xs-6">
+            <label></label>
+            <input type="text" class="form-control" th:field="*{page}" />
+            <div class="input-group-addon">/ <span id="maxPage" th:text="${maxPage}">20</span></div>
+          </div>
+          <div class="input-group col-xs-1">
+            <button id="button-go" type="button" class="btn btn-default">Go</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <!-- pagination -->
+    <div class="pages">
+      <nav class="page-nav">
+        <ul class="pager">
+          <li class="previous"><a href="#">&larr; prev</a></li>
+          <li class="next"><a href="#">next &rarr;</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- table -->
+    <div class="table-responsive">
+      <table id="item-table" class="table table-hover table-condensed">
+        <thead>
+          <tr>
+            <th>name</th>
+            <th>price</th>
+            <th>category</th>
+            <th>brand</th>
+            <th>cond</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="item : ${session.itemList}">
+            <td class="item-name"><a th:href="@{/item/detail}" th:text="${item.name}">Razer BlackWidow Chroma Keyboard</a></td>
+            <td class="item-price" th:text="${item.price}">52.0</td>
+            <td class="item-category">
+              <div th:if="${item.nameAll}">
+                <a th:href="@{/item/search(daiCategoryId=${item.daiCategoryId})}" th:data-category="${item.daiCategoryId}" th:text="${item.daiCategoryName}">Electronics</a> /
+                <a th:href="@{/item/search(chuCategoryId=${item.chuCategoryId})}" th:data-category="${item.chuCategoryId}" th:text="${item.chuCategoryName}">Computers &amp; Tablets</a> /
+                <a th:href="@{/item/search(syoCategoryId=${item.category})}" th:data-category="${item.category}" th:text="${item.syoCategoryName}">Components &amp; Parts</a>
+              </div>
+            </td>
+            <td class="item-brand"><a class="brandLink" th:text="${item.brand}">Razer</a></td>
+            <td class="item-condition" th:text="${item.condition}">3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- pagination -->
+    <div class="pages">
+      <nav class="page-nav">
+        <ul class="pager">
+          <li class="previous"><a href="#">&larr; prev</a></li>
+          <li class="next"><a href="#">next &rarr;</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>
