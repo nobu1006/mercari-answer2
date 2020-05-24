@@ -64,12 +64,14 @@
     // nextリンククリック時のイベント処理設定
     $('.next').on('click', function() {
       $('#searchForm [name=page]').val(currentPage + 1);
+      $('#searchForm [name=actionMode]').val('search');
       $('#searchForm').submit();
     });
 
     // previousリンククリック時のイベント処理設定
     $('.previous').on('click', function() {
       $('#searchForm [name=page]').val(currentPage - 1);
+      $('#searchForm [name=actionMode]').val('search');
       $('#searchForm').submit();
     });
 
